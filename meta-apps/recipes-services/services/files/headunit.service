@@ -1,0 +1,11 @@
+[Unit]
+Description= headunit
+After=can.service
+
+[Service]
+Type=forking
+User=root
+ExecStart=sh /usr/bin/headunit-service.sh
+
+[Install]
+WantedBy=multi-user.target

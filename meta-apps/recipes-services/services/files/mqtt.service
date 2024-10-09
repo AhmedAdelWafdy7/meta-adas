@@ -1,0 +1,14 @@
+[Unit]
+Description= mqtt
+After=headunit.service mosquitto.service
+
+[Service]
+Type=forking
+User=root
+ExecStart=sh /usr/bin/mqtt-service.sh
+Restart=always
+RestartSec=1
+TimeoutStartSec=infinity
+
+[Install]
+WantedBy=multi-user.target
