@@ -25,3 +25,14 @@ echo "#Enable CAN" >> $CONF
 echo -e "KERNEL_DEVICETREE:append = \" \\ 
     overlays/mcp251xfd.dtbo \\
 \"\n" >> $CONF
+
+echo "#Enable Wayland" >> $CONF
+echo -e "DISTRO_FEATURES:append = \"wayland\"" >> $CONF
+echo -e "CORE_IMAGE_EXTRA_INSTALL = \"wayland\"" >> $CONF
+echo -e "PACKAGECONFIG:remove:pn-qtwayland = \"xcomposite-glx\"" >> $CONF
+
+echo "#Enable Camera" >> $CONF
+echo -e "VIDEO_CAMERA = \"1\"" >> $CONF
+
+echo "# IP Compliance about WiFi/BT pacakge" >> $CONF
+echo -e "LICENSE_FLAGS_ACCEPTED += \"synaptics-killswitch\"\n" >> $CONF
