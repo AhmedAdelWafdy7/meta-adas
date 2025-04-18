@@ -1,4 +1,4 @@
 #!/bin/bash
 
-export YOUTUBE_API_KEY=AIzaSyA-eizylBNGDZSTK3FMWt7XgeEubKCkh6o
+export YOUTUBE_API_KEY="replace with API KEY"
 /usr/bin/HeadUnit -platform eglfs -fullscreen &
