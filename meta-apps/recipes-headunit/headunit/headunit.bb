@@ -12,7 +12,6 @@ qtserialbus \
 qtquickcontrols \
 qtquickcontrols2 \
 qtx11extras \
-qtcore \
 qtconnectivity \
 qtmultimedia \
 qtgraphicaleffects \
@@ -20,39 +19,20 @@ qtwebengine \
 qtvirtualkeyboard \   
 "
 
-DEPENDS = " cmake-native \
-openssl \
+DEPENDS = "cmake-native \
 ${QT_BASE} \
 ${QT_PKGS} \
 "
 
-RDEPENDS:${PN} = " openssl \
+RDEPENDS:${PN} = " \
 ${QT_BASE} \
 ${QT_PKGS} \
 "
 
-SRC_URI = "git://github.com/AhmedAdelWafdy7/ECU-HEAD.git;protocol=https;branch=master \
-file://    
-"
+SRC_URI = "git://github.com/AhmedAdelWafdy7/ECU-HEAD.git;protocol=https;branch=adas"
 
-SRCREV = "49487c4369d70f9ae383dab4b7a1f5b2b51f0d29"
+SRCREV = "e24176d2379d6142a60b1fabdbedc9ba80f9a5e1"
 
 S = "${WORKDIR}/git"
-
+EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=Debug"
 inherit cmake_qt5
-
-EXTRA_OECMAKE += " -DBUILD_EXE=1 \
--DBUILD_LIB=1 \ 
--DBUILD_CONF=1 \
--DBUILD_APP=1 \
-"
-
-do_install:append() {
-    install -d ${D}${sysconfdir}/ssl/certs
-    install -m 0755 ${WORKDIR}/youtube.pem ${D}${sysconfdir}/ssl/certs/
-}
-
-FILES:${PN} += " \ 
-${bindir}/app-hu \
-${libdir}/qml/User \
-"

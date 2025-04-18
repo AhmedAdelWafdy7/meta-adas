@@ -36,3 +36,34 @@ echo -e "VIDEO_CAMERA = \"1\"" >> $CONF
 
 echo "# IP Compliance about WiFi/BT pacakge" >> $CONF
 echo -e "LICENSE_FLAGS_ACCEPTED += \"synaptics-killswitch\"\n" >> $CONF
+
+# Define environment variables
+export NAMESPACE="sdv-system"
+export OTA_VERSION="1.0.0"
+export ECU_CORE_VERSION="1.0.0"
+
+# Create the namespace if it doesn't exist
+kubectl create namespace $NAMESPACE --dry-run=client -o yaml | kubectl apply -f -
+
+# Apply RBAC configurations
+kubectl apply -f Secure-OTA-Application/kubernetes/config/rbac.yaml -n $NAMESPACE
+
+# Apply ConfigMaps
+kubectl apply -f Secure-OTA-Application/kubernetes/config/ota-configmap.yaml -n $NAMESPACE
+
+# Create persistent volume claims
+kubectl apply -f Secure-OTA-Application/kubernetes/storage/storage-claims.yaml -n $NAMESPACE
+
+# Deploy OTA components
+kubectl apply -f Secure-OTA-Application/kubernetes/deployments/server-deployment.yaml -n $NAMESPACE
+kubectl apply -f Secure-OTA-Application/kubernetes/deployments/app-deployment.yaml -n $NAMESPACE
+kubectl apply -f Secure-OTA-Application/kubernetes/deployments/ota-manager-deployment.yaml -n $NAMESPACE
+kubectl apply -f Secure-OTA-Application/kubernetes/services/ota-services.yaml -n $NAMESPACE
+
+# Deploy ECU-CORE components
+kubectl apply -f ECU-CORE/kubernetes/deployments/ros-master-deployment.yaml -n $NAMESPACE
+kubectl apply -f ECU-CORE/kubernetes/deployments/sensor-node-deployment.yaml -n $NAMESPACE
+kubectl apply -f ECU-CORE/kubernetes/deployments/control-node-deployment.yaml -n $NAMESPACE
+kubectl apply -f ECU-CORE/kubernetes/services/ros-services.yaml -n $NAMESPACE
+
+echo "SDV system deployment complete!"
