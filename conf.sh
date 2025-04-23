@@ -37,6 +37,12 @@ echo -e "VIDEO_CAMERA = \"1\"" >> $CONF
 echo "# IP Compliance about WiFi/BT pacakge" >> $CONF
 echo -e "LICENSE_FLAGS_ACCEPTED += \"synaptics-killswitch\"\n" >> $CONF
 
+# Add WiFi support
+echo "# Enable WiFi support" >> $CONF
+echo "DISTRO_FEATURES:append = \" wifi\"" >> $CONF
+echo "MACHINE_FEATURES:append = \" wifi bluetooth\"" >> $CONF
+echo "CORE_IMAGE_EXTRA_INSTALL:append = \" linux-firmware-rpidistro-bcm43455 wireless-regdb wpa-supplicant iw\"" >> $CONF
+
 # Define environment variables
 export NAMESPACE="sdv-system"
 export OTA_VERSION="1.0.0"

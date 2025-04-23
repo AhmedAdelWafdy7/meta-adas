@@ -14,11 +14,14 @@ using json = nlohmann::json;
 bool update_possible = false;
 
 void on_connect(struct mosquitto *mosq, void *userdata, int rc) {
+    std::string on_connect_msg  = "";
     if (rc == 0) {
         std::cout << "Connected to MQTT broker" << std::endl;
         mosquitto_subscribe(mosq, NULL, "ota/update", 0);
         mosquitto_subscribe(mosq, NULL, "ota/response", 0);
-        // i should publish on ota/update_possible "" and should be retained 
+        // i should publish on ota/update_possible "" and should be retained
+        mosquitto_publish(mosq, NULL, "ota/update_possible", on_connect_msg.size(), on_connect_msg.c_str(), 0, true);
+
     } else {
         std::cerr << "Failed to connect to MQTT broker" << std::endl;
     }
@@ -110,6 +113,8 @@ void on_message(struct mosquitto *mosq, void *userdata, const struct mosquitto_m
         }
     } else if (topic == "ota/response") {
         // payload is verison so i should publish on ota/update_possible "updating" 
+        std::string updating_msg = "updating";
+        mosquitto_publish(mosq, NULL, "ota/update_possible", updating_msg.size(), updating_msg.c_str(), 0, false);
         system("kill -9 $(pgrep -f HeadUnit)");
         system("chmod +x ../../HeadUnit_latest");
         system("mv ../../HeadUnit_latest /usr/bin/HeadUnit");
@@ -128,7 +133,7 @@ int main(int argc, char *argv[]) {
 
     mosquitto_connect_callback_set(mosq, on_connect);
     mosquitto_message_callback_set(mosq, on_message);
-    if (mosquitto_connect(mosq,4.232.161.185, 1883, 60) != MOSQ_ERR_SUCCESS) {
+    if (mosquitto_connect(mosq,"local_host", 1883, 60) != MOSQ_ERR_SUCCESS) {
         std::cerr << "Failed to connect to MQTT broker" << std::endl;
         return 1;
     }

@@ -1,1 +1,0 @@
-PACKAGECONFIG += "webrtc proprietary-codecs pulseaudio pepper-plugins" 
